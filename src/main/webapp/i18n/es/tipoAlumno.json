@@ -1,0 +1,10 @@
+{
+  "tallerConstruccionApp": {
+    "TipoAlumno": {
+      "null": "",
+      "REGULAR": "REGULAR",
+      "LIBRE": "LIBRE",
+      "PROMOCIONAL": "PROMOCIONAL"
+    }
+  }
+}

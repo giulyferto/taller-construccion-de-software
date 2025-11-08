@@ -1,0 +1,44 @@
+{
+  "annotations": {
+    "changelogDate": "20251108171829"
+  },
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "dni",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "apellido",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "fechaNacimiento",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "tipoAlumno",
+      "fieldType": "TipoAlumno",
+      "fieldValues": "REGULAR,LIBRE,PROMOCIONAL"
+    },
+    {
+      "fieldName": "notaPromedio",
+      "fieldType": "BigDecimal"
+    }
+  ],
+  "jpaMetamodelFiltering": false,
+  "name": "Alumno",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}
