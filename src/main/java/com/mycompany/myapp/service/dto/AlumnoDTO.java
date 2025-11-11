@@ -5,7 +5,9 @@ import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link com.mycompany.myapp.domain.Alumno} entity.
@@ -30,6 +32,8 @@ public class AlumnoDTO implements Serializable {
     private TipoAlumno tipoAlumno;
 
     private BigDecimal notaPromedio;
+
+    private Set<CursoDTO> cursos = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -87,6 +91,14 @@ public class AlumnoDTO implements Serializable {
         this.notaPromedio = notaPromedio;
     }
 
+    public Set<CursoDTO> getCursos() {
+        return cursos;
+    }
+
+    public void setCursos(Set<CursoDTO> cursos) {
+        this.cursos = cursos;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -119,6 +131,7 @@ public class AlumnoDTO implements Serializable {
             ", fechaNacimiento='" + getFechaNacimiento() + "'" +
             ", tipoAlumno='" + getTipoAlumno() + "'" +
             ", notaPromedio=" + getNotaPromedio() +
+            ", cursos=" + getCursos() +
             "}";
     }
 }

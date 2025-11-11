@@ -68,6 +68,8 @@ public class AlumnoAsserts {
      * @param actual the actual entity
      */
     public static void assertAlumnoUpdatableRelationshipsEquals(Alumno expected, Alumno actual) {
-        // empty method
+        assertThat(actual)
+            .as("Verify Alumno relationships")
+            .satisfies(a -> assertThat(a.getCursos()).as("check cursos").isEqualTo(expected.getCursos()));
     }
 }

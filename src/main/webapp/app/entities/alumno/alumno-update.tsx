@@ -4,8 +4,10 @@ import { Button, Col, Row } from 'reactstrap';
 import { Translate, ValidatedField, ValidatedForm, isNumber, translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
+import { getEntities as getCursos } from 'app/entities/curso/curso.reducer';
 import { TipoAlumno } from 'app/shared/model/enumerations/tipo-alumno.model';
 import { createEntity, getEntity, reset, updateEntity } from './alumno.reducer';
 
@@ -17,6 +19,7 @@ export const AlumnoUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
+  const cursos = useAppSelector(state => state.curso.entities);
   const alumnoEntity = useAppSelector(state => state.alumno.entity);
   const loading = useAppSelector(state => state.alumno.loading);
   const updating = useAppSelector(state => state.alumno.updating);
@@ -33,6 +36,8 @@ export const AlumnoUpdate = () => {
     } else {
       dispatch(getEntity(id));
     }
+
+    dispatch(getCursos({}));
   }, []);
 
   useEffect(() => {
@@ -55,6 +60,7 @@ export const AlumnoUpdate = () => {
     const entity = {
       ...alumnoEntity,
       ...values,
+      cursos: mapIdList(values.cursos),
     };
 
     if (isNew) {
@@ -70,6 +76,7 @@ export const AlumnoUpdate = () => {
       : {
           tipoAlumno: 'REGULAR',
           ...alumnoEntity,
+          cursos: alumnoEntity?.cursos?.map(e => e.id.toString()),
         };
 
   return (
@@ -158,6 +165,23 @@ export const AlumnoUpdate = () => {
                 data-cy="notaPromedio"
                 type="text"
               />
+              <ValidatedField
+                label={translate('tallerConstruccionApp.alumno.curso')}
+                id="alumno-curso"
+                data-cy="curso"
+                type="select"
+                multiple
+                name="cursos"
+              >
+                <option value="" key="0" />
+                {cursos
+                  ? cursos.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/alumno" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

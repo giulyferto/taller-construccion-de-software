@@ -10,39 +10,39 @@ import {
   entityTableSelector,
 } from '../../support/entity';
 
-describe('Alumno e2e test', () => {
-  const alumnoPageUrl = '/alumno';
-  const alumnoPageUrlPattern = new RegExp('/alumno(\\?.*)?$');
+describe('Curso e2e test', () => {
+  const cursoPageUrl = '/curso';
+  const cursoPageUrlPattern = new RegExp('/curso(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const alumnoSample = { dni: 681, nombre: 'beneath yippee gifted', apellido: 'whoever pantyhose', fechaNacimiento: '2025-11-08' };
+  const cursoSample = { nombre: 'imagineer upright' };
 
-  let alumno;
+  let curso;
 
   beforeEach(() => {
     cy.login(username, password);
   });
 
   beforeEach(() => {
-    cy.intercept('GET', '/api/alumnos+(?*|)').as('entitiesRequest');
-    cy.intercept('POST', '/api/alumnos').as('postEntityRequest');
-    cy.intercept('DELETE', '/api/alumnos/*').as('deleteEntityRequest');
+    cy.intercept('GET', '/api/cursos+(?*|)').as('entitiesRequest');
+    cy.intercept('POST', '/api/cursos').as('postEntityRequest');
+    cy.intercept('DELETE', '/api/cursos/*').as('deleteEntityRequest');
   });
 
   afterEach(() => {
-    if (alumno) {
+    if (curso) {
       cy.authenticatedRequest({
         method: 'DELETE',
-        url: `/api/alumnos/${alumno.id}`,
+        url: `/api/cursos/${curso.id}`,
       }).then(() => {
-        alumno = undefined;
+        curso = undefined;
       });
     }
   });
 
-  it('Alumnos menu should load Alumnos page', () => {
+  it('Cursos menu should load Cursos page', () => {
     cy.visit('/');
-    cy.clickOnEntityMenuItem('alumno');
+    cy.clickOnEntityMenuItem('curso');
     cy.wait('@entitiesRequest').then(({ response }) => {
       if (response?.body.length === 0) {
         cy.get(entityTableSelector).should('not.exist');
@@ -50,27 +50,27 @@ describe('Alumno e2e test', () => {
         cy.get(entityTableSelector).should('exist');
       }
     });
-    cy.getEntityHeading('Alumno').should('exist');
-    cy.url().should('match', alumnoPageUrlPattern);
+    cy.getEntityHeading('Curso').should('exist');
+    cy.url().should('match', cursoPageUrlPattern);
   });
 
-  describe('Alumno page', () => {
+  describe('Curso page', () => {
     describe('create button click', () => {
       beforeEach(() => {
-        cy.visit(alumnoPageUrl);
+        cy.visit(cursoPageUrl);
         cy.wait('@entitiesRequest');
       });
 
-      it('should load create Alumno page', () => {
+      it('should load create Curso page', () => {
         cy.get(entityCreateButtonSelector).click();
-        cy.url().should('match', new RegExp('/alumno/new$'));
-        cy.getEntityCreateUpdateHeading('Alumno');
+        cy.url().should('match', new RegExp('/curso/new$'));
+        cy.getEntityCreateUpdateHeading('Curso');
         cy.get(entityCreateSaveButtonSelector).should('exist');
         cy.get(entityCreateCancelButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', alumnoPageUrlPattern);
+        cy.url().should('match', cursoPageUrlPattern);
       });
     });
 
@@ -78,68 +78,68 @@ describe('Alumno e2e test', () => {
       beforeEach(() => {
         cy.authenticatedRequest({
           method: 'POST',
-          url: '/api/alumnos',
-          body: alumnoSample,
+          url: '/api/cursos',
+          body: cursoSample,
         }).then(({ body }) => {
-          alumno = body;
+          curso = body;
 
           cy.intercept(
             {
               method: 'GET',
-              url: '/api/alumnos+(?*|)',
+              url: '/api/cursos+(?*|)',
               times: 1,
             },
             {
               statusCode: 200,
               headers: {
-                link: '<http://localhost/api/alumnos?page=0&size=20>; rel="last",<http://localhost/api/alumnos?page=0&size=20>; rel="first"',
+                link: '<http://localhost/api/cursos?page=0&size=20>; rel="last",<http://localhost/api/cursos?page=0&size=20>; rel="first"',
               },
-              body: [alumno],
+              body: [curso],
             },
           ).as('entitiesRequestInternal');
         });
 
-        cy.visit(alumnoPageUrl);
+        cy.visit(cursoPageUrl);
 
         cy.wait('@entitiesRequestInternal');
       });
 
-      it('detail button click should load details Alumno page', () => {
+      it('detail button click should load details Curso page', () => {
         cy.get(entityDetailsButtonSelector).first().click();
-        cy.getEntityDetailsHeading('alumno');
+        cy.getEntityDetailsHeading('curso');
         cy.get(entityDetailsBackButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', alumnoPageUrlPattern);
+        cy.url().should('match', cursoPageUrlPattern);
       });
 
-      it('edit button click should load edit Alumno page and go back', () => {
+      it('edit button click should load edit Curso page and go back', () => {
         cy.get(entityEditButtonSelector).first().click();
-        cy.getEntityCreateUpdateHeading('Alumno');
+        cy.getEntityCreateUpdateHeading('Curso');
         cy.get(entityCreateSaveButtonSelector).should('exist');
         cy.get(entityCreateCancelButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', alumnoPageUrlPattern);
+        cy.url().should('match', cursoPageUrlPattern);
       });
 
-      it('edit button click should load edit Alumno page and save', () => {
+      it('edit button click should load edit Curso page and save', () => {
         cy.get(entityEditButtonSelector).first().click();
-        cy.getEntityCreateUpdateHeading('Alumno');
+        cy.getEntityCreateUpdateHeading('Curso');
         cy.get(entityCreateSaveButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', alumnoPageUrlPattern);
+        cy.url().should('match', cursoPageUrlPattern);
       });
 
-      it('last delete button click should delete instance of Alumno', () => {
-        cy.intercept('GET', '/api/alumnos/*').as('dialogDeleteRequest');
+      it('last delete button click should delete instance of Curso', () => {
+        cy.intercept('GET', '/api/cursos/*').as('dialogDeleteRequest');
         cy.get(entityDeleteButtonSelector).last().click();
         cy.wait('@dialogDeleteRequest');
-        cy.getEntityDeleteDialogHeading('alumno').should('exist');
+        cy.getEntityDeleteDialogHeading('curso').should('exist');
         cy.get(entityConfirmDeleteButtonSelector).click();
         cy.wait('@deleteEntityRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(204);
@@ -147,49 +147,37 @@ describe('Alumno e2e test', () => {
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', alumnoPageUrlPattern);
+        cy.url().should('match', cursoPageUrlPattern);
 
-        alumno = undefined;
+        curso = undefined;
       });
     });
   });
 
-  describe('new Alumno page', () => {
+  describe('new Curso page', () => {
     beforeEach(() => {
-      cy.visit(`${alumnoPageUrl}`);
+      cy.visit(`${cursoPageUrl}`);
       cy.get(entityCreateButtonSelector).click();
-      cy.getEntityCreateUpdateHeading('Alumno');
+      cy.getEntityCreateUpdateHeading('Curso');
     });
 
-    it('should create an instance of Alumno', () => {
-      cy.get(`[data-cy="dni"]`).type('21962');
-      cy.get(`[data-cy="dni"]`).should('have.value', '21962');
+    it('should create an instance of Curso', () => {
+      cy.get(`[data-cy="nombre"]`).type('byX');
+      cy.get(`[data-cy="nombre"]`).should('have.value', 'byX');
 
-      cy.get(`[data-cy="nombre"]`).type('inside');
-      cy.get(`[data-cy="nombre"]`).should('have.value', 'inside');
-
-      cy.get(`[data-cy="apellido"]`).type('as insistent yippee');
-      cy.get(`[data-cy="apellido"]`).should('have.value', 'as insistent yippee');
-
-      cy.get(`[data-cy="fechaNacimiento"]`).type('2025-11-08');
-      cy.get(`[data-cy="fechaNacimiento"]`).blur();
-      cy.get(`[data-cy="fechaNacimiento"]`).should('have.value', '2025-11-08');
-
-      cy.get(`[data-cy="tipoAlumno"]`).select('REGULAR');
-
-      cy.get(`[data-cy="notaPromedio"]`).type('12652.62');
-      cy.get(`[data-cy="notaPromedio"]`).should('have.value', '12652.62');
+      cy.get(`[data-cy="descripcion"]`).type('consequently immediately');
+      cy.get(`[data-cy="descripcion"]`).should('have.value', 'consequently immediately');
 
       cy.get(entityCreateSaveButtonSelector).click();
 
       cy.wait('@postEntityRequest').then(({ response }) => {
         expect(response?.statusCode).to.equal(201);
-        alumno = response.body;
+        curso = response.body;
       });
       cy.wait('@entitiesRequest').then(({ response }) => {
         expect(response?.statusCode).to.equal(200);
       });
-      cy.url().should('match', alumnoPageUrlPattern);
+      cy.url().should('match', cursoPageUrlPattern);
     });
   });
 });

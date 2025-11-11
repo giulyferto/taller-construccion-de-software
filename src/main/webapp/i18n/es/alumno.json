@@ -23,7 +23,8 @@
       "apellido": "Apellido",
       "fechaNacimiento": "Fecha Nacimiento",
       "tipoAlumno": "Tipo Alumno",
-      "notaPromedio": "Nota Promedio"
+      "notaPromedio": "Nota Promedio",
+      "curso": "Curso"
     }
   }
 }

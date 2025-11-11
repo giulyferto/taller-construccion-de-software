@@ -1,11 +1,14 @@
 package com.mycompany.myapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mycompany.myapp.domain.enumeration.TipoAlumno;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -47,6 +50,11 @@ public class Alumno implements Serializable {
 
     @Column(name = "nota_promedio", precision = 21, scale = 2)
     private BigDecimal notaPromedio;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "alumnos")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "alumnos", "profesor" }, allowSetters = true)
+    private Set<Curso> cursos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -139,6 +147,37 @@ public class Alumno implements Serializable {
 
     public void setNotaPromedio(BigDecimal notaPromedio) {
         this.notaPromedio = notaPromedio;
+    }
+
+    public Set<Curso> getCursos() {
+        return this.cursos;
+    }
+
+    public void setCursos(Set<Curso> cursos) {
+        if (this.cursos != null) {
+            this.cursos.forEach(i -> i.removeAlumno(this));
+        }
+        if (cursos != null) {
+            cursos.forEach(i -> i.addAlumno(this));
+        }
+        this.cursos = cursos;
+    }
+
+    public Alumno cursos(Set<Curso> cursos) {
+        this.setCursos(cursos);
+        return this;
+    }
+
+    public Alumno addCurso(Curso curso) {
+        this.cursos.add(curso);
+        curso.getAlumnos().add(this);
+        return this;
+    }
+
+    public Alumno removeCurso(Curso curso) {
+        this.cursos.remove(curso);
+        curso.getAlumnos().remove(this);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

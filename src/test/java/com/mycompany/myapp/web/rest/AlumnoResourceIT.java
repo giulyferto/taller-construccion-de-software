@@ -388,7 +388,11 @@ class AlumnoResourceIT {
         Alumno partialUpdatedAlumno = new Alumno();
         partialUpdatedAlumno.setId(alumno.getId());
 
-        partialUpdatedAlumno.fechaNacimiento(UPDATED_FECHA_NACIMIENTO).tipoAlumno(UPDATED_TIPO_ALUMNO).notaPromedio(UPDATED_NOTA_PROMEDIO);
+        partialUpdatedAlumno
+            .nombre(UPDATED_NOMBRE)
+            .fechaNacimiento(UPDATED_FECHA_NACIMIENTO)
+            .tipoAlumno(UPDATED_TIPO_ALUMNO)
+            .notaPromedio(UPDATED_NOTA_PROMEDIO);
 
         restAlumnoMockMvc
             .perform(

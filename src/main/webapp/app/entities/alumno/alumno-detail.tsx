@@ -72,6 +72,19 @@ export const AlumnoDetail = () => {
             </span>
           </dt>
           <dd>{alumnoEntity.notaPromedio}</dd>
+          <dt>
+            <Translate contentKey="tallerConstruccionApp.alumno.curso">Curso</Translate>
+          </dt>
+          <dd>
+            {alumnoEntity.cursos
+              ? alumnoEntity.cursos.map((val, i) => (
+                  <span key={val.id}>
+                    <a>{val.id}</a>
+                    {alumnoEntity.cursos && i === alumnoEntity.cursos.length - 1 ? '' : ', '}
+                  </span>
+                ))
+              : null}
+          </dd>
         </dl>
         <Button tag={Link} to="/alumno" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
