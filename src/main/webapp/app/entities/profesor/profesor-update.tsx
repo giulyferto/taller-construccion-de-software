@@ -97,6 +97,12 @@ export const ProfesorUpdate = () => {
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
                   minLength: { value: 2, message: translate('entity.validation.minlength', { min: 2 }) },
+                  pattern: {
+                    // acepta letras (incluye acentos), espacios, guiones y apóstrofes; no acepta dígitos
+                    value: /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]+$/,
+                    message: 'El nombre no puede contener números ni caracteres inválidos',
+                  },
+                  maxLength: { value: 100, message: 'Máximo 100 caracteres' },
                 }}
               />
               <ValidatedField
@@ -105,6 +111,13 @@ export const ProfesorUpdate = () => {
                 name="apellido"
                 data-cy="apellido"
                 type="text"
+                validate={{
+                  pattern: {
+                    value: /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]+$/,
+                    message: 'El apellido no puede contener números ni caracteres inválidos',
+                  },
+                  maxLength: { value: 100, message: 'Máximo 100 caracteres' },
+                }}
               />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/profesor" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />

@@ -109,6 +109,12 @@ export const CursoUpdate = () => {
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
                   minLength: { value: 3, message: translate('entity.validation.minlength', { min: 3 }) },
+                  pattern: {
+                    // acepta letras (incluye acentos), espacios, guiones y apóstrofes; no acepta dígitos
+                    value: /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]+$/,
+                    message: 'El nombre del curso no puede contener números ni caracteres inválidos',
+                  },
+                  maxLength: { value: 100, message: 'Máximo 100 caracteres' },
                 }}
               />
               <ValidatedField
@@ -117,6 +123,10 @@ export const CursoUpdate = () => {
                 name="descripcion"
                 data-cy="descripcion"
                 type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  maxLength: { value: 255, message: 'Máximo 255 caracteres' },
+                }}
               />
               <ValidatedField
                 label={translate('tallerConstruccionApp.curso.alumno')}
@@ -125,8 +135,10 @@ export const CursoUpdate = () => {
                 type="select"
                 multiple
                 name="alumnos"
+                validate={{
+                  validate: v => (Array.isArray(v) ? v.length > 0 : !!v) || translate('entity.validation.required'),
+                }}
               >
-                <option value="" key="0" />
                 {alumnos
                   ? alumnos.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
@@ -141,6 +153,9 @@ export const CursoUpdate = () => {
                 data-cy="profesor"
                 label={translate('tallerConstruccionApp.curso.profesor')}
                 type="select"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
               >
                 <option value="" key="0" />
                 {profesors

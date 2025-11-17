@@ -123,6 +123,12 @@ export const AlumnoUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
+                  pattern: {
+                    // acepta letras (incluye acentos), espacios, guiones y apóstrofes; no acepta dígitos
+                    value: /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]+$/,
+                    message: 'El nombre no puede contener números ni caracteres inválidos',
+                  },
+                  maxLength: { value: 100, message: 'Máximo 100 caracteres' },
                 }}
               />
               <ValidatedField
@@ -133,6 +139,11 @@ export const AlumnoUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
+                  pattern: {
+                    value: /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]+$/,
+                    message: 'El apellido no puede contener números ni caracteres inválidos',
+                  },
+                  maxLength: { value: 100, message: 'Máximo 100 caracteres' },
                 }}
               />
               <ValidatedField
@@ -164,6 +175,10 @@ export const AlumnoUpdate = () => {
                 name="notaPromedio"
                 data-cy="notaPromedio"
                 type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  validate: v => isNumber(v) || translate('entity.validation.number'),
+                }}
               />
               <ValidatedField
                 label={translate('tallerConstruccionApp.alumno.curso')}
@@ -172,6 +187,9 @@ export const AlumnoUpdate = () => {
                 type="select"
                 multiple
                 name="cursos"
+                validate={{
+                  validate: v => (Array.isArray(v) ? v.length > 0 : !!v) || 'Debes seleccionar al menos un curso',
+                }}
               >
                 <option value="" key="0" />
                 {cursos
